@@ -1,0 +1,96 @@
+# golangci.com configuration
+# https://github.com/golangci/golangci/wiki/Configuration
+
+# example
+# https://github.com/golangci/golangci-lint/blob/master/.golangci.example.yml
+
+output:
+  path-prefix: ""
+  sort-results: true
+  format: tab
+  print-issued-lines: false
+  print-linter-name: true
+  uniq-by-line: false
+
+linters-settings:
+  govet:
+    check-shadowing: true
+    fieldalignment: true
+  gocyclo:
+    min-complexity: 15
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  misspell:
+    locale: US
+  lll:
+    line-length: 140
+  gocritic:
+    enabled-tags:
+      - performance
+      - style
+      - experimental
+    disabled-checks:
+      - wrapperFunc
+
+linters:
+  disable:
+    - godox # disable errors
+    - funlen
+    - rowserrcheck
+    - gci
+    - godot
+  enable:
+    - asciicheck
+    - bodyclose
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - exhaustive
+    - exportloopref
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofumpt
+    - goheader
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - nestif
+    - nlreturn
+    - noctx
+    - nolintlint
+    - prealloc
+    - revive
+    - sqlclosecheck
+    - staticcheck
+    - stylecheck
+    - testpackage
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+    - wsl
+
+run:
+  timeout: 5m
+  tests: false
+  skip-dirs:
+    - graph/generated
+    - graph/model
+    
