@@ -1,10 +1,7 @@
 package core
 
-import "PersonalPlanner/events"
+import "github.com/go-telegram/bot"
 
-type Core interface {
-	events.Receiver
-	events.Processor
-	events.Sender
-	Start() error
+type TelegramEngine struct {
+	server *bot.Bot
 }
