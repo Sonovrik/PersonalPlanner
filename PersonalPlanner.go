@@ -3,8 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-
-	"github.com/sirupsen/logrus"
+	"log"
 )
 
 func mustToken() string {
@@ -17,10 +16,11 @@ func mustToken() string {
 	flag.Parse()
 
 	if token == nil || *token == "" {
-		logrus.Fatalln("token is not specified")
+		log.Fatalln("token is not specified")
 	}
 
 	return *token
+
 }
 
 func main() {
