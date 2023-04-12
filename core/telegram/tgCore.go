@@ -3,15 +3,17 @@ package telegram
 import "PersonalPlanner/events"
 
 type TgCore struct {
-	fetcher   events.Fetcher
+	receiver  events.Receiver
 	processor events.Processor
+	sender    events.Sender
 	batchSize int
 }
 
-func New(fetcher events.Fetcher, processor events.Processor, batchSize int) TgCore {
+func New(receiver events.Receiver, processor events.Processor, sender events.Sender, batchSize int) TgCore {
 	return TgCore{
-		fetcher:   fetcher,
+		receiver:  receiver,
 		processor: processor,
+		sender:    sender,
 		batchSize: batchSize,
 	}
 }

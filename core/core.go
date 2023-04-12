@@ -3,7 +3,8 @@ package core
 import "PersonalPlanner/events"
 
 type Core interface {
-	events.Fetcher
+	events.Receiver
 	events.Processor
+	events.Sender
 	Start() error
 }
