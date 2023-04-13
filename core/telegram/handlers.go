@@ -16,12 +16,16 @@ func HelpHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	// TODO handle error
 	_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID: update.Message.Chat.ID,
-		Text:   msgHello,
+		Text:   msgHelp,
 	})
 }
 
 func StartHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
-
+	// TODO handle error
+	_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
+		ChatID: update.Message.Chat.ID,
+		Text:   msgHello,
+	})
 }
 
 func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
