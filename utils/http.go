@@ -13,7 +13,7 @@ func GetRequest(ctx context.Context, url string, result any, f ...func(req *http
 	return request(ctx, http.MethodGet, url, nil, result, f...)
 }
 
-func request(ctx context.Context, method string, url string, reqBody any, result any, f ...func(req *http.Request)) error {
+func request(ctx context.Context, method, url string, reqBody, result any, f ...func(req *http.Request)) error {
 	b, err := json.Marshal(reqBody)
 	if err != nil {
 		return err
@@ -21,6 +21,7 @@ func request(ctx context.Context, method string, url string, reqBody any, result
 
 	r := bytes.NewReader(b)
 	req, err := http.NewRequestWithContext(ctx, method, url, r)
+
 	for _, fun := range f {
 		fun(req)
 	}
@@ -44,7 +45,6 @@ func request(ctx context.Context, method string, url string, reqBody any, result
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
-
 	if err != nil {
 		return err
 	}

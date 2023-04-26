@@ -1,4 +1,3 @@
 package telegram
 
-type Processor struct {
-}
+type Processor struct{}

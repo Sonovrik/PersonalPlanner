@@ -44,6 +44,7 @@ linters:
     - rowserrcheck
     - gci
     - godot
+    - gofumpt
   enable:
     - asciicheck
     - bodyclose
@@ -59,7 +60,6 @@ linters:
     - goconst
     - gocritic
     - gocyclo
-    - gofumpt
     - goheader
     - gomodguard
     - goprintffuncname

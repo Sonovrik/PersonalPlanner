@@ -1,12 +1,14 @@
 package telegram
 
 import (
-	"PersonalPlanner/services/weather/yandex"
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
-	"time"
+
+	"PersonalPlanner/services/weather/yandex"
 )
 
 const (
@@ -43,10 +45,12 @@ func StartHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 }
 
 func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
-	yandexWeatherApiKey := "35e9673a-3d3b-4d4f-ba7f-956e1b1f6a10"
-	w, err := yandex.GetWeather(ctx, yandexWeatherApiKey, 55.755864, 37.617698)
+	yandexWeatherAPIKey := "35e9673a-3d3b-4d4f-ba7f-956e1b1f6a10"
+
+	w, err := yandex.GetWeather(ctx, yandexWeatherAPIKey, 55.755864, 37.617698)
 	if err != nil {
 		ErrorHandler(ctx, b, update, err)
+
 		return
 	}
 
@@ -63,7 +67,10 @@ func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	})
 
 	next := ""
-	for _, v := range w.Forecast.Parts {
+
+	var v *yandex.Part
+	for i := range w.Forecast.Parts {
+		v = &w.Forecast.Parts[i]
 		next += fmt.Sprintf("Прогноз на %s - %s\n"+
 			"Средняя температура - %d (°C)\n"+
 			"Ощущается как - %d (°C)\n"+
@@ -80,7 +87,6 @@ func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 		ChatID: update.Message.Chat.ID,
 		Text:   next,
 	})
-
 }
 
 func UnknownHandler(ctx context.Context, b *bot.Bot, update *models.Update) {

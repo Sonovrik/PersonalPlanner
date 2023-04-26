@@ -1,7 +1,7 @@
 package yandex
 
 // conditions - коды погодного описания и значения на русском языке, получаемые из Fact.Condition
-var conditions = map[string]string{
+var conditions = map[string]string{ //nolint
 	"partly-cloudy":          "малооблачно",
 	"overcast":               "пасмурно",
 	"drizzle":                "морось",
@@ -24,7 +24,7 @@ var conditions = map[string]string{
 }
 
 // conditions - коды погодного описания и значения на русском языке, получаемые из Fact.Condition
-var partNames = map[string]string{
+var partNames = map[string]string{ //nolint
 	"night":   "ночь",
 	"morning": "утро",
 	"day":     "день",

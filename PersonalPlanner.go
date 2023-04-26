@@ -1,7 +1,6 @@
 package main
 
 import (
-	"PersonalPlanner/core/telegram"
 	"context"
 	"flag"
 	"log"
@@ -9,6 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"PersonalPlanner/core/telegram"
 )
 
 func mustToken() string {
@@ -25,7 +26,6 @@ func mustToken() string {
 	}
 
 	return *token
-
 }
 
 func main() {
@@ -39,15 +39,17 @@ func main() {
 	}
 
 	go func() {
-		err := engine.Run(ctx)
+		err = engine.Run(ctx)
 		if err != nil {
 			log.Fatalln(err)
 		}
 	}()
 
 	log.Println("Engine started")
+
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+
 	go func() {
 		<-sig
 

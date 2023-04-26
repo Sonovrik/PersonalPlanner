@@ -1,4 +1,3 @@
 package processor
 
-type Processor interface {
-}
+type Processor interface{}
