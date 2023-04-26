@@ -1,7 +1,10 @@
 package yandex
 
 import (
+	"PersonalPlanner/utils"
 	"context"
+	"fmt"
+	"net/http"
 )
 
 // GetCondition получение описания погоды на русском языке
@@ -50,11 +53,18 @@ func (p Part) GetCondition() string {
 
 // GetWeather Получение погоды из Яндекс API
 func GetWeather(ctx context.Context, yandexWeatherApiKey string, lat float32, lon float32) (*Weather, error) {
-	//url := fmt.Sprintf("https://api.weather.yandex.ru/v2/informers?lat=%f&lon=%f&lang=ru_RU", lat, lon)
-	//w := &Weather{}
-	//req := func(req *http.Request) {
-	//		req.Header.Add("X-Yandex-API-Key", yandexWeatherApiKey)
-	//}
-
-	return nil, nil
+	url := fmt.Sprintf("https://api.weather.yandex.ru/v2/informers?lat=%f&lon=%f&lang=ru_RU", lat, lon)
+	w := &Weather{}
+	err := utils.GetRequest(
+		ctx,
+		url,
+		w,
+		func(req *http.Request) {
+			req.Header.Add("X-Yandex-API-Key", yandexWeatherApiKey)
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return w, err
 }
