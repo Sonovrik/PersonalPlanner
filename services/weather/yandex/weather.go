@@ -7,6 +7,9 @@ import (
 	"net/http"
 )
 
+const apiURLTemplate = "https://api.weather.yandex.ru/v2/informers?lat=%f&lon=%f"
+const weatherIconURLTemplate = "https://yastatic.net/weather/i/icons/funky/dark/%s.svg"
+
 // GetCondition получение описания погоды на русском языке
 func (f Fact) GetCondition() string {
 	return conditions[f.Condition]
@@ -53,7 +56,7 @@ func (p Part) GetCondition() string {
 
 // GetWeather Получение погоды из Яндекс API
 func GetWeather(ctx context.Context, yandexWeatherApiKey string, lat float32, lon float32) (*Weather, error) {
-	url := fmt.Sprintf("https://api.weather.yandex.ru/v2/informers?lat=%f&lon=%f&lang=ru_RU", lat, lon)
+	url := fmt.Sprintf(apiURLTemplate, lat, lon)
 	w := &Weather{}
 	err := utils.GetRequest(
 		ctx,
@@ -63,8 +66,10 @@ func GetWeather(ctx context.Context, yandexWeatherApiKey string, lat float32, lo
 			req.Header.Add("X-Yandex-API-Key", yandexWeatherApiKey)
 		},
 	)
+
 	if err != nil {
 		return nil, err
 	}
-	return w, err
+
+	return w, nil
 }
