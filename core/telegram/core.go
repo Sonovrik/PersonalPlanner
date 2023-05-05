@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"PersonalPlanner/core"
 	"context"
 	"flag"
 	"log"
@@ -18,7 +19,7 @@ func MustToken() string {
 	flag.Parse()
 
 	if token == nil || *token == "" {
-		log.Fatalln("token is not specified")
+		log.Fatalln("Core token is not specified")
 	}
 
 	return *token
@@ -28,7 +29,7 @@ type Engine struct {
 	server *bot.Bot
 }
 
-func New(engineToken, weatherAPIToken string) (*Engine, error) {
+func New(engineToken string) (core.Core, error) {
 	handlers := HandlerOptions()
 
 	botEngine, err := bot.New(engineToken, handlers...)

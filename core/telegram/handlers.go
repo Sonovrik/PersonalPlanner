@@ -45,8 +45,9 @@ func StartHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	wToken := weather.MustToken()
 
-	wApi := weather.WApi(yandex.New(wToken))
-	w, err := wApi.GetWeather(ctx, 55.755864, 37.617698)
+	wAPI := weather.WApi(yandex.New(wToken))
+
+	w, err := wAPI.GetWeather(ctx, 55.755864, 37.617698)
 	if err != nil {
 		ErrorHandler(ctx, b, update, err)
 
@@ -54,7 +55,7 @@ func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	}
 
 	currentW := w.Current()
-	if len(currentW) == 0 {
+	if currentW == "" {
 		ErrorHandler(ctx, b, update, err)
 
 		return
@@ -67,7 +68,7 @@ func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	})
 
 	nextW := w.Next()
-	if len(nextW) == 0 {
+	if nextW == "" {
 		ErrorHandler(ctx, b, update, err)
 
 		return
