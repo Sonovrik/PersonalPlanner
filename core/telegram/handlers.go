@@ -1,10 +1,8 @@
 package telegram
 
 import (
+	"PersonalPlanner/services/weather"
 	"context"
-	"fmt"
-	"time"
-
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 
@@ -45,47 +43,40 @@ func StartHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 }
 
 func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
-	yandexWeatherAPIKey := "35e9673a-3d3b-4d4f-ba7f-956e1b1f6a10"
+	wToken := weather.MustToken()
 
-	w, err := yandex.GetWeather(ctx, yandexWeatherAPIKey, 55.755864, 37.617698)
+	wApi := weather.WApi(yandex.New(wToken))
+	w, err := wApi.GetWeather(ctx, 55.755864, 37.617698)
 	if err != nil {
 		ErrorHandler(ctx, b, update, err)
 
 		return
 	}
 
-	msg := fmt.Sprintf("Погода на %s\n"+
-		"Погода - %s\n"+
-		"Температура - %d (°C)\n"+
-		"Ощущается как - %d (°C)\n",
-		time.Unix(w.Now, 0), w.Fact.GetCondition(), w.Fact.Temp, w.Fact.FeelsLike)
+	currentW := w.Current()
+	if len(currentW) == 0 {
+		ErrorHandler(ctx, b, update, err)
 
-	// TODO handle error
-	_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID: update.Message.Chat.ID,
-		Text:   msg,
-	})
-
-	next := ""
-
-	var v *yandex.Part
-	for i := range w.Forecast.Parts {
-		v = &w.Forecast.Parts[i]
-		next += fmt.Sprintf("Прогноз на %s - %s\n"+
-			"Средняя температура - %d (°C)\n"+
-			"Ощущается как - %d (°C)\n"+
-			"Скорость ветра - %.1f\n"+
-			"Количество осадков - %d мм\n"+
-			"Вероятность выпадения осадков - %d\n"+
-			"Период осадков - %d мин\n\n",
-			v.GetPartName(), v.GetCondition(), v.TempAvg,
-			v.FeelsLike, v.WindSpeed, v.PrecMm, v.PrecProb, v.PrecPeriod)
+		return
 	}
 
 	// TODO handle error
 	_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID: update.Message.Chat.ID,
-		Text:   next,
+		Text:   currentW,
+	})
+
+	nextW := w.Next()
+	if len(nextW) == 0 {
+		ErrorHandler(ctx, b, update, err)
+
+		return
+	}
+
+	// TODO handle error
+	_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
+		ChatID: update.Message.Chat.ID,
+		Text:   nextW,
 	})
 }
 

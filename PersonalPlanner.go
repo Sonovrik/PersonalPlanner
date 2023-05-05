@@ -1,8 +1,8 @@
 package main
 
 import (
+	"PersonalPlanner/services/weather"
 	"context"
-	"flag"
 	"log"
 	"os"
 	"os/signal"
@@ -12,28 +12,49 @@ import (
 	"PersonalPlanner/core/telegram"
 )
 
-func mustToken() string {
-	token := flag.String(
-		"token",
-		"",
-		"token for access to telegram bot",
-	)
+// Engine part
+const (
+	TelegramEngine = iota
+)
 
-	flag.Parse()
+// Weather part
+const (
+	Yandex = iota
+)
 
-	if token == nil || *token == "" {
-		log.Fatalln("token is not specified")
+func mustEngineToken(engineType int) string {
+	var token string
+
+	switch engineType {
+	case TelegramEngine:
+		token = telegram.MustToken()
 	}
 
-	return *token
+	log.Fatalln("Engine token is not specified")
+
+	return token
+}
+
+func mustWeatherToken(weatherApiType int) string {
+	var token string
+
+	switch weatherApiType {
+	case Yandex:
+		token = weather.MustToken()
+	}
+
+	log.Fatalln("Weather token is not specified")
+
+	return token
 }
 
 func main() {
-	token := mustToken()
+	engineToken := mustEngineToken(TelegramEngine)
+	weatherToken := mustWeatherToken(Yandex)
 
 	ctx, stop := context.WithCancel(context.Background())
 
-	engine, err := telegram.New(token)
+	engine, err := telegram.New(engineToken, weatherToken)
 	if err != nil {
 		log.Fatalln(err)
 	}

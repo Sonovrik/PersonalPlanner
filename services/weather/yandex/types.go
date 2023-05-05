@@ -1,5 +1,17 @@
 package yandex
 
+type WApi struct {
+	token string
+}
+
+func New(token string) *WApi {
+	wAPI := &WApi{
+		token: token,
+	}
+
+	return wAPI
+}
+
 // API doc https://yandex.ru/dev/weather/doc/dg/concepts/forecast-info.html#forecast
 
 // Weather Информация о погоде

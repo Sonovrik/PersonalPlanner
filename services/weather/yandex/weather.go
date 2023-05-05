@@ -1,11 +1,12 @@
 package yandex
 
 import (
+	"PersonalPlanner/services/weather"
 	"PersonalPlanner/utils"
-
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 const (
@@ -48,23 +49,50 @@ func (p *Part) GetCondition() string {
 	return conditions[p.Condition]
 }
 
+func (w *Weather) Current() string {
+	return fmt.Sprintf("Погода на %s\n"+
+		"Погода - %s\n"+
+		"Температура - %d (°C)\n"+
+		"Ощущается как - %d (°C)\n",
+		time.Unix(w.Now, 0), w.Fact.GetCondition(), w.Fact.Temp, w.Fact.FeelsLike)
+}
+
+func (w *Weather) Next() string {
+	next := ""
+
+	for i := range w.Forecast.Parts {
+		v := &w.Forecast.Parts[i]
+		next += fmt.Sprintf("Прогноз на %s - %s\n"+
+			"Средняя температура - %d (°C)\n"+
+			"Ощущается как - %d (°C)\n"+
+			"Скорость ветра - %.1f\n"+
+			"Количество осадков - %d мм\n"+
+			"Вероятность выпадения осадков - %d\n"+
+			"Период осадков - %d мин\n\n",
+			v.GetPartName(), v.GetCondition(), v.TempAvg,
+			v.FeelsLike, v.WindSpeed, v.PrecMm, v.PrecProb, v.PrecPeriod)
+	}
+
+	return next
+}
+
 // GetWeather Получение погоды из Яндекс API
-func GetWeather(ctx context.Context, yandexWeatherAPIKey string, lat, lon float32) (*Weather, error) {
+func (w *WApi) GetWeather(ctx context.Context, lat, lon float32) (weather.Weather, error) {
 	url := fmt.Sprintf(apiURLTemplate, lat, lon)
 
-	w := &Weather{}
+	wr := &Weather{}
 
 	err := utils.GetRequest(
 		ctx,
 		url,
-		w,
+		wr,
 		func(req *http.Request) {
-			req.Header.Add("X-Yandex-API-Key", yandexWeatherAPIKey)
+			req.Header.Add("X-Yandex-API-Key", w.token)
 		},
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	return w, nil
+	return weather.Weather(wr), nil
 }

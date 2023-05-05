@@ -2,18 +2,36 @@ package telegram
 
 import (
 	"context"
+	"flag"
+	"log"
 
 	"github.com/go-telegram/bot"
 )
+
+func MustToken() string {
+	token := flag.String(
+		"token",
+		"",
+		"token for access to telegram bot",
+	)
+
+	flag.Parse()
+
+	if token == nil || *token == "" {
+		log.Fatalln("token is not specified")
+	}
+
+	return *token
+}
 
 type Engine struct {
 	server *bot.Bot
 }
 
-func New(token string) (*Engine, error) {
+func New(engineToken, weatherAPIToken string) (*Engine, error) {
 	handlers := HandlerOptions()
 
-	botEngine, err := bot.New(token, handlers...)
+	botEngine, err := bot.New(engineToken, handlers...)
 	if err != nil {
 		return nil, err
 	}
