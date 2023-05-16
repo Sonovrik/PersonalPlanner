@@ -27,7 +27,7 @@ func MustToken() string {
 	flag.Parse()
 
 	if token == nil || *token == "" {
-		log.Fatalln("token is not specified")
+		log.Fatalln("Token for access to weather api is not specified")
 	}
 
 	return *token

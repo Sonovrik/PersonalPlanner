@@ -2,12 +2,19 @@ package telegram
 
 import (
 	"PersonalPlanner/services/weather"
+	"PersonalPlanner/services/weather/yandex"
 	"context"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
-
-	"PersonalPlanner/services/weather/yandex"
 )
+
+var weatherAPI weather.WApi //nolint
+
+func mustInitWeather(token string) {
+	wToken := token
+
+	weatherAPI = weather.WApi(yandex.New(wToken))
+}
 
 const (
 	startCMD   = "/start"
@@ -43,11 +50,7 @@ func StartHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 }
 
 func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
-	wToken := weather.MustToken()
-
-	wAPI := weather.WApi(yandex.New(wToken))
-
-	w, err := wAPI.GetWeather(ctx, 55.755864, 37.617698)
+	w, err := weatherAPI.GetWeather(ctx, 55.755864, 37.617698)
 	if err != nil {
 		ErrorHandler(ctx, b, update, err)
 

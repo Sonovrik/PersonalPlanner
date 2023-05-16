@@ -1,7 +1,9 @@
 package main
 
 import (
+	"PersonalPlanner/utils"
 	"context"
+	"flag"
 	"log"
 	"os"
 	"os/signal"
@@ -11,39 +13,34 @@ import (
 	"PersonalPlanner/core/telegram"
 )
 
-// Engine part
-const (
-	TelegramEngine = iota
-)
+func mustConfigPath() string {
+	var configPath string
 
-// Weather part
-const (
-	Yandex = iota
-)
+	flag.StringVar(&configPath, "configPath", "", "path to config file")
+	flag.Parse()
 
-func mustEngineToken(engineType int) string {
-	var token string
-
-	switch engineType {
-	case TelegramEngine:
-		token = telegram.MustToken()
-	default:
-		log.Fatalln("Wrong engine")
+	if configPath == "" {
+		configPath = "./cfg/config.yml"
+		log.Println("Using default path to config: ", configPath)
 	}
 
-	return token
+	return configPath
 }
 
 func main() {
-	engineToken := mustEngineToken(TelegramEngine)
+	cfgPath := mustConfigPath()
 
-	ctx, stop := context.WithCancel(context.Background())
+	cfg, err := utils.Init(cfgPath)
+	if err != nil {
+		log.Fatalln("Can't init config: ", err.Error())
+	}
 
-	engine, err := telegram.New(engineToken)
+	engine, err := telegram.New(cfg.Core.CoreAPIToken, cfg.Core.WeatherAPIToken)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	ctx, stop := context.WithCancel(context.Background())
 	go func() {
 		err = engine.Run(ctx)
 		if err != nil {
