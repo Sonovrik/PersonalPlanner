@@ -4,6 +4,7 @@ import (
 	"PersonalPlanner/services/weather"
 	"PersonalPlanner/services/weather/yandex"
 	"context"
+	"fmt"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 )
@@ -58,29 +59,20 @@ func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	}
 
 	currentW := w.Current()
-	if currentW == "" {
-		ErrorHandler(ctx, b, update, err)
-
-		return
-	}
-
-	// TODO handle error
-	_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID: update.Message.Chat.ID,
-		Text:   currentW,
-	})
-
 	nextW := w.Next()
-	if nextW == "" {
+
+	if nextW == "" || currentW == "" {
+		err = fmt.Errorf("can't get current or next weather")
 		ErrorHandler(ctx, b, update, err)
 
 		return
 	}
 
 	// TODO handle error
+	weatherMsg := currentW + "\n\n" + nextW
 	_, _ = b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID: update.Message.Chat.ID,
-		Text:   nextW,
+		Text:   weatherMsg,
 	})
 }
 
