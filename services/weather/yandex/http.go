@@ -1,4 +1,4 @@
-package utils
+package yandex
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func GetRequest(ctx context.Context, url string, result any, f ...func(req *http.Request)) error {
+func getRequest(ctx context.Context, url string, result any, f ...func(req *http.Request)) error {
 	return request(ctx, http.MethodGet, url, nil, result, f...)
 }
 

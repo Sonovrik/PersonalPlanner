@@ -2,7 +2,6 @@ package yandex
 
 import (
 	"PersonalPlanner/services/weather"
-	"PersonalPlanner/utils"
 	"context"
 	"fmt"
 	"net/http"
@@ -82,7 +81,7 @@ func (w *WApi) GetWeather(ctx context.Context, lat, lon float32) (weather.Weathe
 
 	wr := &Weather{}
 
-	err := utils.GetRequest(
+	err := getRequest(
 		ctx,
 		url,
 		wr,

@@ -5,6 +5,7 @@ import (
 	"context"
 	"flag"
 	"log"
+	"time"
 
 	"github.com/go-telegram/bot"
 )
@@ -49,6 +50,31 @@ func New(engineToken, weatherAPIToken string) (core.Core, error) {
 }
 
 func (e *Engine) Run(ctx context.Context) error {
+	var tmp int64 = 717143592
+
+	ticker := time.NewTicker(10 * time.Second)
+
+	quit := make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				_, err := e.server.SendMessage(ctx, &bot.SendMessageParams{
+					ChatID: tmp,
+					Text:   "weatherMsg",
+				})
+				if err != nil {
+					return
+				}
+			case <-quit:
+				ticker.Stop()
+
+				return
+			}
+		}
+	}()
+
 	e.server.Start(ctx)
 
 	return nil
