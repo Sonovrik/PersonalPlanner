@@ -1,7 +1,7 @@
 package yandex
 
 import (
-	"PersonalPlanner/services/weather"
+	"PersonalPlanner/internal/services/weather"
 	"context"
 	"fmt"
 	"net/http"

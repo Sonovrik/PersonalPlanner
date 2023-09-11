@@ -1,7 +1,7 @@
 package telegram
 
 import (
-	"PersonalPlanner/core"
+	"PersonalPlanner/internal/services/core"
 	"context"
 	"flag"
 	"log"

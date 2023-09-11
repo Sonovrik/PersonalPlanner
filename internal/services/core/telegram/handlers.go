@@ -1,8 +1,8 @@
 package telegram
 
 import (
-	"PersonalPlanner/services/weather"
-	"PersonalPlanner/services/weather/yandex"
+	"PersonalPlanner/internal/services/weather"
+	"PersonalPlanner/internal/services/weather/yandex"
 	"context"
 	"fmt"
 	"github.com/go-telegram/bot"

@@ -12,7 +12,7 @@
 *.out
 
 # Daemon binary
-personalPlanner
+./personalPlanner
 
 # Trash and system settings
 # Logs
