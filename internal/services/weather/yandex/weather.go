@@ -52,8 +52,9 @@ func (w *Weather) Current() string {
 	return fmt.Sprintf("Погода на %s\n"+
 		"Погода - %s\n"+
 		"Температура - %d (°C)\n"+
-		"Ощущается как - %d (°C)\n",
-		time.Unix(w.Now, 0), w.Fact.GetCondition(), w.Fact.Temp, w.Fact.FeelsLike)
+		"Ощущается как - %d (°C)\n"+
+		"Скорость ветра - %.1f\n",
+		time.Unix(w.Now, 0), w.Fact.GetCondition(), w.Fact.Temp, w.Fact.FeelsLike, w.Fact.WindSpeed)
 }
 
 func (w *Weather) Next() string {
@@ -65,7 +66,7 @@ func (w *Weather) Next() string {
 			"Средняя температура - %d (°C)\n"+
 			"Ощущается как - %d (°C)\n"+
 			"Скорость ветра - %.1f\n"+
-			"Количество осадков - %d мм\n"+
+			"Количество осадков - %.1f мм\n"+
 			"Вероятность выпадения осадков - %d\n"+
 			"Период осадков - %d мин\n\n",
 			v.GetPartName(), v.GetCondition(), v.TempAvg,
@@ -75,14 +76,15 @@ func (w *Weather) Next() string {
 	return next
 }
 
-// GetWeather Получение погоды из Яндекс API
-func (w *WApi) GetWeather(ctx context.Context, lat, lon float32) (weather.Weather, error) {
+// WeatherInfo Получение погоды Яндекс API
+func (w *WApi) WeatherInfo(ctx context.Context, lat, lon float32) (weather.Weather, error) {
 	url := fmt.Sprintf(apiURLTemplate, lat, lon)
 
 	wr := &Weather{}
 
-	err := getRequest(
+	err := doRequest(
 		ctx,
+		http.MethodGet,
 		url,
 		wr,
 		func(req *http.Request) {

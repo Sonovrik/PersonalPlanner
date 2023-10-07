@@ -50,6 +50,16 @@ func New(engineToken, weatherAPIToken string) (core.Core, error) {
 }
 
 func (e *Engine) Run(ctx context.Context) error {
+	e.server.Start(ctx)
+
+	return nil
+}
+
+func (e *Engine) Stop(_ context.Context) error {
+	return nil
+}
+
+func (e *Engine) sendToMe(ctx context.Context) { //nolint
 	var tmp int64 = 717143592
 
 	ticker := time.NewTicker(10 * time.Second)
@@ -74,12 +84,4 @@ func (e *Engine) Run(ctx context.Context) error {
 			}
 		}
 	}()
-
-	e.server.Start(ctx)
-
-	return nil
-}
-
-func (e *Engine) Stop(_ context.Context) error {
-	return nil
 }

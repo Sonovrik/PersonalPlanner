@@ -1,6 +1,12 @@
 #!/bin/bash -e
 
-PROJECT_NAME="PersonalPlanner"
+function WorkDirectory {
+    dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+    echo "$dir/.."
+}
+
+workDir=$(WorkDirectory)
+cd "$workDir"
 
 golangci-lint run ./...
-go run $PROJECT_NAME "$1" "$2"
+go run ./... "$1" "$2"

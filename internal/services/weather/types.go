@@ -14,7 +14,7 @@ type Weather interface {
 }
 
 type WApi interface {
-	GetWeather(ctx context.Context, lat, lon float32) (Weather, error)
+	WeatherInfo(ctx context.Context, lat, lon float32) (Weather, error)
 }
 
 func MustToken() string {

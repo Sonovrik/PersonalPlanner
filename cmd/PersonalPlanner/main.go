@@ -4,19 +4,19 @@ import (
 	"PersonalPlanner/internal/app"
 	"PersonalPlanner/internal/config"
 	"context"
-	"flag"
 	"log"
+	"os"
 )
 
 func mustConfigPath() string {
 	var configPath string
 
-	flag.StringVar(&configPath, "configPath", "", "path to config file")
-	flag.Parse()
-
-	if configPath == "" {
-		configPath = "./cfg/config.yml"
+	dir := os.Getenv("CONFIGS_DIR")
+	if dir == "" {
+		configPath = "./configs/config.yml"
 		log.Println("Using default path to config: ", configPath)
+	} else {
+		configPath = dir + "config.yml"
 	}
 
 	return configPath

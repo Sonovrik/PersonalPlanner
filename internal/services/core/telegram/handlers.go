@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
-	"log"
 )
 
 var weatherManager weather.WApi //nolint
@@ -46,7 +45,7 @@ func StartHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 }
 
 func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
-	w, err := weatherManager.GetWeather(ctx, 55.755864, 37.617698)
+	w, err := weatherManager.WeatherInfo(ctx, 55.755864, 37.617698)
 	if err != nil {
 		ErrorHandler(ctx, b, update, err)
 
@@ -62,8 +61,6 @@ func WeatherHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 
 		return
 	}
-
-	log.Println(update.Message.Chat.ID)
 
 	// TODO handle error
 	weatherMsg := currentW + "\n\n" + nextW

@@ -9,11 +9,7 @@ import (
 	"net/http"
 )
 
-func getRequest(ctx context.Context, url string, result any, f ...func(req *http.Request)) error {
-	return request(ctx, http.MethodGet, url, nil, result, f...)
-}
-
-func request(ctx context.Context, method, url string, reqBody, result any, f ...func(req *http.Request)) error {
+func doRequest(ctx context.Context, method, url string, reqBody, result any, f ...func(req *http.Request)) error {
 	b, err := json.Marshal(reqBody)
 	if err != nil {
 		return err
@@ -47,10 +43,6 @@ func request(ctx context.Context, method, url string, reqBody, result any, f ...
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return err
-	}
-
-	if result == nil {
-		return nil
 	}
 
 	return json.Unmarshal(body, result)

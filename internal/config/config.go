@@ -9,6 +9,7 @@ import (
 
 func Init(configPath *string) (*Config, error) {
 	var err error
+
 	var yamlCfg []byte
 
 	if configPath != nil {
@@ -25,7 +26,7 @@ func Init(configPath *string) (*Config, error) {
 
 	cfg := new(Config)
 	if err = yaml.Unmarshal(yamlCfg, cfg); err != nil {
-		return nil, fmt.Errorf("can't parse yaml file %s", configPath)
+		return nil, fmt.Errorf("can't parse yaml config file")
 	}
 
 	return cfg, nil

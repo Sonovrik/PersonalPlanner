@@ -25,10 +25,11 @@ func RunTelegramBot(ctx context.Context, cfg *config.Config) {
 		}
 	}()
 
-	log.Println("Engine started")
+	log.Println("Bot started")
 
 	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	exitSignals := []os.Signal{syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT}
+	signal.Notify(sig, exitSignals...)
 
 	go func() {
 		<-sig
