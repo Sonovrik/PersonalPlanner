@@ -1,23 +1,43 @@
 version: '3.9'
 
 services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo_container
+    ports:
+      - '${MONGO_HOST_PORT}:${MONGO_CONTAINER_PORT}'
+    environment:
+      MONGO_HOST_PORT: '${MONGO_HOST_PORT}'
+      MONGO_CONTAINER_PORT: '${MONGO_CONTAINER_PORT}'
+      MONGO_INITDB_ROOT_USERNAME: '${MONGO_INITDB_ROOT_USERNAME}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGO_INITDB_ROOT_PASSWORD}'
+    restart: always
+#    volumes:
+#      - ../:${BACKEND_WORKDIR}
+    networks:
+      - backend
+
+
   bot:
     container_name: bot_container
     build:
       context: ./
       dockerfile: Dockerfile
+    ports:
+      - '${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}'
     environment:
       WORKDIR: '${BACKEND_WORKDIR}'
       PROJECT_NAME: '${PROJECT_NAME}'
       BACKEND_HOST_PORT: '${BACKEND_HOST_PORT}'
       BACKEND_CONTAINER_PORT: '${BACKEND_CONTAINER_PORT}'
-    ports:
-      - '${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}'
     restart: always
     volumes:
       - ../:${BACKEND_WORKDIR}
     networks:
       - backend
+    depends_on:
+      - mongo
+
 
 
 networks:

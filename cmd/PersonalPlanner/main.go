@@ -4,7 +4,6 @@ import (
 	"PersonalPlanner/internal/app"
 	"PersonalPlanner/internal/config"
 	"context"
-	"fmt"
 	"log"
 	"os"
 )
@@ -30,8 +29,6 @@ func main() {
 	if err != nil {
 		log.Fatalln("Can't init config: ", err.Error())
 	}
-
-	fmt.Println(cfg.Core.CoreAPIToken)
 
 	app.RunTelegramBot(context.Background(), cfg)
 }
