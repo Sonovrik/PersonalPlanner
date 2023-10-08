@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  bot:
+    container_name: bot_container
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      WORKDIR: '${BACKEND_WORKDIR}'
+      PROJECT_NAME: '${PROJECT_NAME}'
+      BACKEND_HOST_PORT: '${BACKEND_HOST_PORT}'
+      BACKEND_CONTAINER_PORT: '${BACKEND_CONTAINER_PORT}'
+    ports:
+      - '${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}'
+    restart: always
+    volumes:
+      - ../:${BACKEND_WORKDIR}
+    networks:
+      - backend
+
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mongo:
+    name: mongo_data
